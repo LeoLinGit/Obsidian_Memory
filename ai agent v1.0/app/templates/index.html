@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemFlow - AI 记忆助手</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+
+    <!-- CDN：代码高亮主题（Markdown 渲染 + XSS 过滤 + 高亮，加载失败会自动降级为纯文本） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- 本地样式 -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app">
+
+        <!-- ===== 左侧侧边栏 ===== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <button class="new-chat-btn" id="new-chat-btn">+ 新对话</button>
+            </div>
+            <nav class="conversation-list" id="conversation-list"></nav>
+            <div class="sidebar-footer">
+                <button class="obsidian-btn" id="obsidian-config-btn" title="设置导出目录">📓 Obsidian 路径</button>
+                <button class="obsidian-btn" id="obsidian-sync-btn" title="把 Obsidian 笔记导入记忆库">⬆ 同步笔记</button>
+                <button class="obsidian-btn" id="export-all-btn" title="导出全部对话到 Obsidian">⬇ 全部导出</button>
+                <button class="settings-btn" id="settings-btn">⚙ 设置</button>
+            </div>
+        </aside>
+        <!-- 移动端侧边栏遮罩 -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- ===== 右侧主聊天区 ===== -->
+        <main class="chat">
+            <header class="chat-header">
+                <button class="menu-btn" id="menu-btn" title="展开菜单">☰</button>
+                <div class="header-title">
+                    <span class="header-model" id="header-model">qwen2.5:7b</span>
+                </div>
+                <button class="clear-btn" id="clear-btn" title="开始全新对话，清空当前上下文">清空上下文</button>
+            </header>
+
+            <div class="messages" id="messages">
+                <!-- 欢迎占位 -->
+                <div class="welcome" id="welcome">
+                    <div class="welcome-icon">🧠</div>
+                    <h2>MemFlow 记忆助手</h2>
+                    <p>基于本地 Ollama 运行，支持长期记忆检索。有什么可以帮你的？</p>
+                </div>
+            </div>
+
+            <footer class="composer">
+                <textarea id="input" rows="1" placeholder="输入消息，Enter 发送，Shift+Enter 换行"></textarea>
+                <button class="send-btn" id="send-btn" title="发送">➤</button>
+            </footer>
+        </main>
+    </div>
+
+    <!-- ===== 设置弹窗 ===== -->
+    <div class="settings-popover" id="settings-popover" hidden>
+        <div class="settings-item">
+            <span class="settings-label">模型</span>
+            <select id="model-select"></select>
+        </div>
+        <div class="settings-item">
+            <span class="settings-label">深色模式</span>
+            <button class="theme-toggle" id="theme-toggle">已开启</button>
+        </div>
+    </div>
+
+    <!-- ===== Obsidian 路径设置弹窗 ===== -->
+    <div class="modal-overlay" id="obsidian-modal" hidden>
+        <div class="modal">
+            <h3>设置 Obsidian Vault 路径</h3>
+            <p class="modal-hint">对话将导出为 Markdown 文件，保存到：{路径}\MemFlow\</p>
+            <input type="text" id="obsidian-path-input" placeholder="例如 D:\MyVault" autocomplete="off">
+            <div class="modal-actions">
+                <button class="modal-cancel" id="obsidian-cancel">取消</button>
+                <button class="modal-save" id="obsidian-save">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== file_write 确认弹窗 ===== -->
+    <div class="modal-overlay" id="write-modal" hidden>
+        <div class="modal">
+            <h3>AI 请求写入文件</h3>
+            <p class="modal-hint" id="write-modal-path"></p>
+            <pre class="write-preview" id="write-modal-content"></pre>
+            <div class="modal-actions">
+                <button class="modal-cancel" id="write-deny">拒绝</button>
+                <button class="modal-save" id="write-allow">允许写入</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 全局提示 Toast ===== -->
+    <div class="toast" id="toast" hidden></div>
+
+    <script defer src="/static/script.js"></script>
+</body>
+</html>

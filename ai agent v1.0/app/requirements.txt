@@ -1,0 +1,10 @@
+# MemFlow 依赖（版本已固定，与当前验证通过的环境一致，避免升级带来的 API 兼容波动）
+flask==3.1.3
+requests==2.34.2
+chromadb==1.5.9
+sentence-transformers==6.0.0
+torch==2.13.0
+# web_search 首选搜索引擎（duckduckgo-search 已改名为 ddgs；app.py 同时兼容两个包名）
+ddgs==9.16.0
+# 单元测试（开发依赖）
+pytest

@@ -1,0 +1,90 @@
+# ============================================================
+#  MemFlow .gitignore —— 开源上架前安全清单
+#  目的：只提交「代码 + 文档 + 模板」，严格排除：
+#        大模型 / 向量库 / Obsidian 笔记 / 聊天记录 / 本机私有配置
+# ============================================================
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ---------- Python 虚拟环境 ----------
+venv/
+.venv/
+env/
+ENV/
+
+# ---------- 环境变量 / 敏感配置 ----------
+.env
+.env.*
+!.env.example
+
+# ---------- 本机私有配置 ----------
+# config.json 保存的是「本机 Obsidian 笔记库绝对路径」等私有信息，绝不能上传；
+# 换机器后按 config.example.json 复制一份，再填自己的路径即可。
+app/config.json
+config.json
+
+# Claude Code 本地设置（含历史命令与绝对路径，属私密）
+.claude/
+
+# ---------- 运行时数据（含个人隐私）----------
+# SQLite 聊天记录 / 数据库
+*.db
+*.sqlite
+*.sqlite3
+conversations.db
+chat_history.db
+conversations_old.db
+
+# ChromaDB 向量库：内容是 Obsidian 笔记 + 聊天记录的 embedding，等同泄露原文
+chroma_db/
+app/chroma_db/
+
+# ---------- Obsidian 笔记库 ----------
+# 笔记库通常在项目目录之外（由 config.json 指向）；若有人把 vault 放进仓库，这里兜底
+.obsidian/
+.trash/
+
+# ---------- Ollama 模型 / 缓存 ----------
+# Ollama 模型体积达数 GB，且模型文件不应进版本库；默认位置 ~/.ollama 或 E:\Ollama
+.ollama/
+
+# ---------- 操作系统生成文件 ----------
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ---------- 日志 ----------
+*.log
+
+# ---------- 历史残留 / 备份 ----------
+app v1.0/
+*.bak
+*.orig
+.workbuddy/
+
+# ---------- 个人记忆 / 私人数据 ----------
+# my.memory.md 是个人自我描述，属私人数据；如需示例请改名 my.memory.example.md
+my.memory.md
+
+# ---------- IDE / 编辑器 ----------
+.vscode/
+.idea/
+*.swp
+*~
+
+# ---------- 明确不忽略（防止误拦截关键文件）----------
+!app/start.bat
+!app/config.example.json
+!config.example.json
